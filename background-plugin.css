@@ -1,0 +1,292 @@
+/* Background Plugin CSS */
+:root {
+    --bg: url(https://fastly.picsum.photos/id/961/1200/600.jpg?hmac=-7W-CrsQiPQzXpAvw0MT_xSZFAEukp4QXrfSYZrseig);
+}
+
+/* 背景插件容器 - 不設置z-index，讓子元素各自控制 */
+.background-plugin {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* 容器本身不攔截點擊 */
+}
+
+/* 縮圖控制區 - 確保在最上層且可點擊 */
+.thumbs {
+    position: fixed; /* 改為fixed，脫離父容器的z-index影響 */
+    bottom: 2vmin;
+    width: 90vw;
+    text-align: center;
+    left: 5vw;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    z-index: 99999; /* 確保在最上層 */
+    pointer-events: auto; /* 明確允許點擊 */
+}
+
+.thumbs label {
+    border: 1px solid #fff8;
+    border-radius: 5px;
+    min-width: 10vmin;
+    aspect-ratio: 4/3;
+    display: inline-flex;
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+    box-sizing: border-box;
+    cursor: pointer;
+    opacity: 1;
+    position: relative;
+    transition: all 0.3s ease;
+    pointer-events: auto; /* 確保label可點擊 */
+}
+
+.thumbs label:hover {
+    opacity: 0.8;
+    box-shadow: 0 0 0 2px #fff;
+}
+
+.thumbs label::before {
+    content: "";
+    position: absolute;
+    width: 17px;
+    height: 17px;
+    border-radius: 100%;
+    background: #5387b0;
+    top: 4px;
+    right: 4px;
+    border: 1px solid #fff9;
+    transition: all 0.3s ease;
+    pointer-events: none; /* 裝飾元素不攔截點擊 */
+}
+
+.thumbs label input {
+    position: absolute;
+    z-index: 1;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    cursor: pointer;
+    pointer-events: auto; /* 確保input可接收點擊 */
+}
+
+/* 選中狀態樣式 */
+.thumbs label.selected {
+    box-shadow: 0 0 0 3px #fff !important;
+    opacity: 1 !important;
+}
+
+.thumbs label.selected::before {
+    background: #28a745;
+}
+
+.thumbs label.selected::after {
+    content: "";
+    position: absolute;
+    border: 2px solid #fff;
+    width: 6px;
+    height: 4px;
+    right: 9px;
+    top: 9px;
+    border-width: 0 0 3px 3px;
+    border-radius: 1px;
+    transform: rotate(-45deg);
+    pointer-events: none; /* 裝飾元素不攔截點擊 */
+}
+
+/* 各個縮圖的背景圖片 */
+.thumbs label:nth-child(1) { background-image: url("./pho/01.jpg"); }
+.thumbs label:nth-child(2) { background-image: url("./pho/02.jpg"); }
+.thumbs label:nth-child(3) { background-image: url("./pho/03.jpg"); }
+.thumbs label:nth-child(4) { background-image: url("./pho/04.jpg"); }
+.thumbs label:nth-child(5) { background-image: url("./pho/05.jpg"); }
+.thumbs label:nth-child(6) { background-image: url("./pho/06.jpg"); }
+.thumbs label:nth-child(7) { background-image: url("./pho/07.jpg"); }
+.thumbs label:nth-child(8) { background-image: url("./pho/08.jpg"); }
+.thumbs label:nth-child(9) { background-image: url("./pho/09.jpg"); }
+
+/* 背景切換 - 使用CSS變數更新 */
+.bg-1 { --bg: url("./pho/01.jpg"); }
+.bg-2 { --bg: url("./pho/02.jpg"); }
+.bg-3 { --bg: url("./pho/03.jpg"); }
+.bg-4 { --bg: url("./pho/04.jpg"); }
+.bg-5 { --bg: url("./pho/05.jpg"); }
+.bg-6 { --bg: url("./pho/06.jpg"); }
+.bg-7 { --bg: url("./pho/07.jpg"); }
+.bg-8 { --bg: url("./pho/08.jpg"); }
+.bg-9 { --bg: url("./pho/09.jpg"); }
+
+/* 漸進式模糊效果 */
+.progressive-blur {
+    top: calc(50vh - 1px) !important;
+    opacity: 1;
+    position: absolute;
+    left: 0;
+    z-index: -10; /* 在背景之下 */
+    inset: auto 0 0 0;
+    height: 50vh;
+    width: 100%;
+    pointer-events: none;
+    transform: rotate(0deg);
+    transition: opacity 0.2s ease;
+}
+
+.progressive-blur:after, .progressive-blur:before, .progressive-blur > div {
+    background-color: #4082b778;
+    position: absolute;
+    inset: 0;
+}
+
+.progressive-blur:before {
+    content: "";
+    z-index: 1;
+    backdrop-filter: blur(0.5px);
+    -webkit-mask: linear-gradient(to bottom, rgba(26, 26, 26, 0) 0%, #1a1a1a 12.5%, #1a1a1a 25%, rgba(26, 26, 26, 0) 37.5%);
+    mask: linear-gradient(to bottom, rgba(26, 26, 26, 0) 0%, #1a1a1a 12.5%, #1a1a1a 25%, rgba(26, 26, 26, 0) 37.5%);
+}
+
+.progressive-blur > div:first-of-type {
+    z-index: 2;
+    backdrop-filter: blur(1px);
+    -webkit-mask: linear-gradient(to bottom, rgba(26, 26, 26, 0) 12.5%, #1a1a1a 25%, #1a1a1a 37.5%, rgba(26, 26, 26, 0) 50%);
+    mask: linear-gradient(to bottom, rgba(26, 26, 26, 0) 12.5%, #1a1a1a 25%, #1a1a1a 37.5%, rgba(26, 26, 26, 0) 50%);
+}
+
+.progressive-blur > div:nth-of-type(2) {
+    z-index: 3;
+    backdrop-filter: blur(2px);
+    -webkit-mask: linear-gradient(to bottom, rgba(26, 26, 26, 0) 25%, #1a1a1a 37.5%, #1a1a1a 50%, rgba(26, 26, 26, 0) 62.5%);
+    mask: linear-gradient(to bottom, rgba(26, 26, 26, 0) 25%, #1a1a1a 37.5%, #1a1a1a 50%, rgba(26, 26, 26, 0) 62.5%);
+}
+
+.progressive-blur > div:nth-of-type(3) {
+    z-index: 4;
+    backdrop-filter: blur(4px);
+    -webkit-mask: linear-gradient(to bottom, rgba(26, 26, 26, 0) 37.5%, #1a1a1a 50%, #1a1a1a 62.5%, rgba(26, 26, 26, 0) 75%);
+    mask: linear-gradient(to bottom, rgba(26, 26, 26, 0) 37.5%, #1a1a1a 50%, #1a1a1a 62.5%, rgba(26, 26, 26, 0) 75%);
+}
+
+.progressive-blur > div:nth-of-type(4) {
+    z-index: 5;
+    backdrop-filter: blur(8px);
+    -webkit-mask: linear-gradient(to bottom, rgba(26, 26, 26, 0) 50%, #1a1a1a 62.5%, #1a1a1a 75%, rgba(26, 26, 26, 0) 87.5%);
+    mask: linear-gradient(to bottom, rgba(26, 26, 26, 0) 50%, #1a1a1a 62.5%, #1a1a1a 75%, rgba(26, 26, 26, 0) 87.5%);
+}
+
+.progressive-blur > div:nth-of-type(5) {
+    z-index: 6;
+    backdrop-filter: blur(16px);
+    -webkit-mask: linear-gradient(to bottom, rgba(26, 26, 26, 0) 62.5%, #1a1a1a 75%, #1a1a1a 87.5%, rgba(26, 26, 26, 0) 100%);
+    mask: linear-gradient(to bottom, rgba(26, 26, 26, 0) 62.5%, #1a1a1a 75%, #1a1a1a 87.5%, rgba(26, 26, 26, 0) 100%);
+}
+
+.progressive-blur > div:nth-of-type(6) {
+    z-index: 7;
+    backdrop-filter: blur(32px);
+    -webkit-mask: linear-gradient(to bottom, rgba(26, 26, 26, 0) 75%, #1a1a1a 87.5%, #1a1a1a 100%);
+    mask: linear-gradient(to bottom, rgba(26, 26, 26, 0) 75%, #1a1a1a 87.5%, #1a1a1a 100%);
+}
+
+.progressive-blur > div:after {
+    content: "";
+    z-index: 8;
+    backdrop-filter: blur(64px);
+    -webkit-mask: linear-gradient(to bottom, rgba(26, 26, 26, 0) 87.5%, #1a1a1a 100%);
+    mask: linear-gradient(to bottom, rgba(26, 26, 26, 0) 87.5%, #1a1a1a 100%);
+}
+
+/* 主要背景容器 */
+.contenedor {
+    position: fixed;
+    background: var(--bg) no-repeat center top;
+    background-size: cover;
+    width: 100%;
+    padding-top: 50vh;
+    transition: all 0.735s ease;
+    z-index: -20; /* 在最底層 */
+    pointer-events: none; /* 不攔截點擊 */
+}
+
+/* 反射效果 */
+.contenedor:after {
+    top: calc(50vh + 1px) !important;
+    content: "";
+    position: absolute;
+    background: var(--bg) no-repeat center top;
+    background-size: cover;
+    width: 100%;
+    padding-top: 50vh;
+    transform: rotateX(180deg);
+    transition: all 0.735s ease;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .thumbs {
+        gap: 4px;
+        width: 95vw;
+        left: 2.5vw;
+    }
+    
+    .thumbs label {
+        min-width: 8vmin;
+    }
+}
+}
+
+/* 反射效果 */
+.contenedor:after {
+    top: calc(50vh + 1px) !important;
+    content: "";
+    position: absolute;
+    background: var(--bg) no-repeat center top;
+    background-size: cover;
+    width: 100%;
+    padding-top: 50vh;
+    transform: rotateX(180deg);
+    transition: all 0.735s ease;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .thumbs {
+        gap: 4px;
+        width: 95vw;
+        left: 2.5vw;
+    }
+    
+    .thumbs label {
+        min-width: 8vmin;
+    }
+}
+}
+
+/* 反射效果 */
+.contenedor:after {
+    top: calc(50vh + 1px) !important;
+    content: "";
+    position: absolute;
+    background: var(--bg) no-repeat center top;
+    background-size: cover;
+    width: 100%;
+    padding-top: 50vh;
+    transform: rotateX(180deg);
+    transition: transform 0.735s ease, padding 0.735s ease;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .thumbs {
+        gap: 4px;
+        width: 95vw;
+        left: 2.5vw;
+    }
+    
+    .thumbs label {
+        min-width: 8vmin;
+    }
+}
